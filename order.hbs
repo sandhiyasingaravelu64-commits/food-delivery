@@ -1,0 +1,23 @@
+<h1>Order #{{order.id}}</h1>
+<p>From: {{restaurantName}}</p>
+
+<h2>Items</h2>
+<ul>
+  {{#each order.items}}
+    <li>{{this}}</li>
+  {{/each}}
+</ul>
+
+<p>Total: ${{money order.total}}</p>
+
+<p>
+  Status:
+  <span class="status {{statusClass order.status}}">{{order.status}}</span>
+</p>
+
+{{!-- conditional block: show an extra note only when the order has been delivered --}}
+{{#if (eq order.status "Delivered")}}
+  <p>Enjoy your meal! This order has been completed.</p>
+{{else}}
+  <p>We'll keep this page updated as your order progresses.</p>
+{{/if}}

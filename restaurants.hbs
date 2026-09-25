@@ -1,0 +1,10 @@
+<h1>Restaurants</h1>
+
+{{#each restaurants}}
+  <div class="card">
+    <h2><a href="/restaurant/{{this.id}}">{{this.name}}</a></h2>
+    <p>{{this.cuisine}} &middot; Rating: {{this.rating}} / 5</p>
+  </div>
+{{else}}
+  <p>No restaurants available right now.</p>
+{{/each}}

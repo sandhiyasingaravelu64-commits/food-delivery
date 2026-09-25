@@ -1,0 +1,10 @@
+{
+  "name": "food-delivery-http",
+  "version": "1.0.0",
+  "description": "Implementation A: Online Food Delivery System using Node's built-in http module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

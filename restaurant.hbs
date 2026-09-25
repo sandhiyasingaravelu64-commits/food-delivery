@@ -1,0 +1,11 @@
+<h1>{{restaurant.name}}</h1>
+<p>{{restaurant.cuisine}} &middot; Rating: {{restaurant.rating}} / 5</p>
+
+<h2>Menu</h2>
+<ul>
+  {{#each restaurant.menu}}
+    <li>{{this.item}} &mdash; ${{money this.price}}</li>
+  {{/each}}
+</ul>
+
+<p><a href="/restaurants">&larr; Back to restaurants</a></p>
