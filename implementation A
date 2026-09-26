@@ -1,1 +1,49 @@
+/**
+ * Implementation A - Online Food Delivery System
+ * Built using ONLY the built-in Node.js "http" module.
+ * No Express, no template engine - HTML is generated manually.
+ */
 
+const http = require('http');
+const url = require('url');
+
+// ---------- In-memory mock data ----------
+
+const restaurants = [
+  {
+    id: 1,
+    name: 'Spice Villa',
+    cuisine: 'Indian',
+    rating: 4.5,
+    menu: [
+      { item: 'Butter Chicken', price: 12.99 },
+      { item: 'Paneer Tikka', price: 10.49 },
+      { item: 'Garlic Naan', price: 3.50 }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Pasta Palace',
+    cuisine: 'Italian',
+    rating: 4.2,
+    menu: [
+      { item: 'Spaghetti Carbonara', price: 13.50 },
+      { item: 'Margherita Pizza', price: 11.00 },
+      { item: 'Tiramisu', price: 6.00 }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Sushi Central',
+    cuisine: 'Japanese',
+    rating: 4.8,
+    menu: [
+      { item: 'Salmon Nigiri (6pc)', price: 9.00 },
+      { item: 'California Roll', price: 8.50 },
+      { item: 'Miso Soup', price: 3.00 }
+    ]
+  }
+];
+
+const orders = {
+  101: { id:
