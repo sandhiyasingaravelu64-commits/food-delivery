@@ -1,9 +1,3 @@
-/**
- * Implementation A - Online Food Delivery System
- * Built using ONLY the built-in Node.js "http" module.
- * No Express, no template engine - HTML is generated manually.
- */
-
 const http = require('http');
 const url = require('url');
 
