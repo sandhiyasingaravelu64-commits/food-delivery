@@ -1,0 +1,118 @@
+const express = require('express');
+const { engine } = require('express-handlebars');
+const path = require('path');
+
+const app = express();
+
+// ---------- In-memory mock data (same shape as Implementation A) ----------
+
+const restaurants = [
+  {
+    id: 1,
+    name: 'Spice Villa',
+    cuisine: 'Indian',
+    rating: 4.5,
+    menu: [
+      { item: 'Butter Chicken', price: 12.99 },
+      { item: 'Paneer Tikka', price: 10.49 },
+      { item: 'Garlic Naan', price: 3.50 }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Pasta Palace',
+    cuisine: 'Italian',
+    rating: 4.2,
+    menu: [
+      { item: 'Spaghetti Carbonara', price: 13.50 },
+      { item: 'Margherita Pizza', price: 11.00 },
+      { item: 'Tiramisu', price: 6.00 }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Sushi Central',
+    cuisine: 'Japanese',
+    rating: 4.8,
+    menu: [
+      { item: 'Salmon Nigiri (6pc)', price: 9.00 },
+      { item: 'California Roll', price: 8.50 },
+      { item: 'Miso Soup', price: 3.00 }
+    ]
+  }
+];
+
+const orders = {
+  101: { id: 101, restaurantId: 1, items: ['Butter Chicken', 'Garlic Naan'], status: 'Out for Delivery', total: 16.49 },
+  102: { id: 102, restaurantId: 2, items: ['Margherita Pizza'], status: 'Preparing', total: 11.00 },
+  103: { id: 103, restaurantId: 3, items: ['California Roll', 'Miso Soup'], status: 'Delivered', total: 11.50 }
+};
+
+// ---------- View engine setup ----------
+
+app.engine(
+  'hbs',
+  engine({
+    extname: '.hbs',
+    defaultLayout: 'main',
+    helpers: {
+      // conditional helper: compares two values for equality (used for status highlighting)
+      eq: (a, b) => a === b,
+      // formatting helper: turns 12.5 into "12.50"
+      money: (value) => Number(value).toFixed(2),
+      // helper: pulls the first word of a status ("Out for Delivery" -> "Out") for CSS classing
+      statusClass: (status) => String(status).split(' ')[0]
+    }
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+
+// ---------- Routes ----------
+
+// Static route: home
+app.get('/', (req, res) => {
+  res.status(200).render('home');
+});
+
+// Static route: restaurant list (dynamic data rendered with {{#each}})
+app.get('/restaurants', (req, res) => {
+  res.status(200).render('restaurants', { restaurants });
+});
+
+// Dynamic route with route parameter: restaurant detail
+app.get('/restaurant/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const restaurant = restaurants.find((r) => r.id === id);
+
+  if (!restaurant) {
+    return res.status(404).render('404', { message: `No restaurant with id ${id}.` });
+  }
+  res.status(200).render('restaurant', { restaurant });
+});
+
+// Dynamic route with route parameter: order status
+app.get('/order/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const order = orders[id];
+
+  if (!order) {
+    return res.status(404).render('404', { message: `No order with id ${id}.` });
+  }
+
+  const restaurant = restaurants.find((r) => r.id === order.restaurantId);
+  res.status(200).render('order', {
+    order,
+    restaurantName: restaurant ? restaurant.name : 'Unknown restaurant'
+  });
+});
+
+// Fallback: 404 for anything else
+app.use((req, res) => {
+  res.status(404).render('404', { message: 'The page you requested does not exist.' });
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Implementation B (Express + Handlebars) running at http://localhost:${PORT}`);
+});
